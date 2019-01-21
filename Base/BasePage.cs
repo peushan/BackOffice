@@ -16,13 +16,19 @@ namespace BackOfficeAutomation
         private IWebElement btnClose;
 
         By btnsignOut = By.XPath("//a[@title='Log Out']");
-
-
-        protected void WaitforVisibility(By locator)
+       
+        protected void WaitforVisibility(By locator, string message)
         {
-            Sleep(1);
-            var wait = new WebDriverWait(driver, new TimeSpan(0, 0, 30));
-            IWebElement element = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(locator));
+            try {
+                Sleep(1);
+                var wait = new WebDriverWait(driver, new TimeSpan(0, 0, 30));
+                IWebElement element = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(locator));
+            }
+            catch (Exception e)
+            {
+                throw new WebDriverTimeoutException(message);
+            }
+            
         }
 
         protected void SendKeys(IWebElement element, String text)
@@ -97,7 +103,7 @@ namespace BackOfficeAutomation
             }
             catch (Exception e)
             {
-                WaitforVisibility(btnsignOut);
+                WaitforVisibility(btnsignOut, "Sign out button is not Visible");
                 Click(btnLogout);
             }
         }

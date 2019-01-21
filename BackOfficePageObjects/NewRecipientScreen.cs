@@ -68,14 +68,14 @@ namespace BackOfficeAutomation.pageObjects
             PageFactory.InitElements(this, new RetryingElementLocator(driver, TimeSpan.FromSeconds(10)));
         }
 
-        public PaymentScreen CreateRecipient(string RecipientFirstName,string RecipientLastName)
+        public PaymentScreen CreateRecipient(string RecipientFirstName,string RecipientLastName,string RecipientCurrency)
         {
             Click(drpCountrysending);
-            SendKeys(txtCountrySend, "Australia");
+            SendKeys(txtCountrySend, RecipientCurrency);
             txtCountrySend.SendKeys(Keys.Enter);
-            WaitforVisibility(TextSelectDelivery);
+            WaitforVisibility(TextSelectDelivery, "New Recipient : Delivery Method is not Visible");
             Click(btnNext);
-            WaitforVisibility(TextFirstName);
+            WaitforVisibility(TextFirstName, "New Recipient : New Recipient Page is not Visible");
 
             SendKeys(txtFirstName, RecipientFirstName);
             SendKeys(txtLastName, RecipientLastName);

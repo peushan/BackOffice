@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
+using Serilog;
 using System;
 
 namespace BackOfficeAutomation.pageObjects
@@ -29,12 +30,14 @@ namespace BackOfficeAutomation.pageObjects
         {
             BasePage.driver = driver;
             PageFactory.InitElements(this, new RetryingElementLocator(driver, TimeSpan.FromSeconds(30)));
+            Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
         }
 
         public void NavigateCustomerTab()
         {
             lnkCustomers.Click();
-            WaitforVisibility(tabCustomers);
+            WaitforVisibility(tabCustomers, "Home Screen - Customer Tab is not Visible");
+            Log.Information("BOU can see the Customers tab");
            
         }
 
@@ -50,6 +53,7 @@ namespace BackOfficeAutomation.pageObjects
             if (txtSuccessMsg.Text.Equals("Signed in successfully."))
             {
                 displaySuccess = true;
+                Log.Information("BOU login Successfully");
                 Click(btnClose);
               
             }

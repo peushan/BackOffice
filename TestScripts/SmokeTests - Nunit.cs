@@ -2,6 +2,7 @@ using BackOfficeAutomation;
 using BackOfficeAutomation.pageObjects;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using Serilog;
 
 namespace BackOfficeAutomationCore
 {
@@ -13,6 +14,8 @@ namespace BackOfficeAutomationCore
         public void SetupDriver()
         {
             GetDriver();
+            Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+
         }
 
         [TearDown]
@@ -36,6 +39,7 @@ namespace BackOfficeAutomationCore
         {
             LoginScreen loginScreen = new LoginScreen(driver);
             HomeScreen homeScreen = loginScreen.navigateHome(UserName,Password);
+            Assert.True(homeScreen.VerifySignInSuccess(), "User Sign in Fail");
             homeScreen.NavigateCustomerTab();
             CustomersScreen customersScreen = homeScreen.NavigateCustomer();
             customersScreen.SignOut();
@@ -62,10 +66,59 @@ namespace BackOfficeAutomationCore
           
         }
 
+
+        /* CDD error message Verification */
+
+        [TestCase("770654", "SGD")]
+        public void KB_FCA_CDDChecks(string KBAccessNo, string CurrencyType)
+        {
+            LoginScreen loginScreen = new LoginScreen(driver);
+            HomeScreen homeScreen = loginScreen.navigateHome("peushan.panagoda@kiwibank.co.nz", "1qaz2wsx@");
+            Assert.True(homeScreen.VerifySignInSuccess(), "User Sign in Fail");
+            homeScreen.NavigateCustomerTab();
+            CustomersScreen customersScreen = homeScreen.NavigateCustomer();
+            customersScreen.SelectSearchCritirea();
+            customersScreen.SearchCustomer(KBAccessNo);
+            Assert.True(customersScreen.VerifyCustomerSearched(KBAccessNo), "Customer not searched");
+            CustomersDetailsScreen customersDetailsScreen = customersScreen.SelectCustomer();
+            Assert.True(customersDetailsScreen.VerifyCustomerDetailPage(), "Customer Details Screen is not Displayed");
+            FCAaccountScreen fCAaccountScreen = customersDetailsScreen.NavigatetoFCA();
+            fCAaccountScreen.NavigateFCAPopUp();
+            Assert.True(fCAaccountScreen.VerifyFCAAccountTitle(), "BOU not see the FCA popup");
+            fCAaccountScreen.CreateNewFCA(CurrencyType);
+            Assert.True(fCAaccountScreen.VerifyCDDAEOIChecks("The customer is not CDD complete. Please arrange to have their details updated in In Touch, then try again."), "BOU not see correct CDD/AEOI error message"); 
+            customersScreen.SignOut();
+        }
+
+
+        /* AEOI error message Verification */
+
+        [TestCase("116153", "PGK")]
+        public void KB_FCA_AEOIChecks(string KBAccessNo, string CurrencyType)
+        {
+            LoginScreen loginScreen = new LoginScreen(driver);
+            HomeScreen homeScreen = loginScreen.navigateHome("peushan.panagoda@kiwibank.co.nz", "1qaz2wsx@");
+            Assert.True(homeScreen.VerifySignInSuccess(), "User Sign in Fail");
+            homeScreen.NavigateCustomerTab();
+            CustomersScreen customersScreen = homeScreen.NavigateCustomer();
+            customersScreen.SelectSearchCritirea();
+            customersScreen.SearchCustomer(KBAccessNo);
+            Assert.True(customersScreen.VerifyCustomerSearched(KBAccessNo), "Customer not searched");
+            CustomersDetailsScreen customersDetailsScreen = customersScreen.SelectCustomer();
+            Assert.True(customersDetailsScreen.VerifyCustomerDetailPage(), "Customer Details Screen is not Displayed");
+            FCAaccountScreen fCAaccountScreen = customersDetailsScreen.NavigatetoFCA();
+            fCAaccountScreen.NavigateFCAPopUp();
+            Assert.True(fCAaccountScreen.VerifyFCAAccountTitle(), "BOU not see the FCA popup");
+            fCAaccountScreen.CreateNewFCA(CurrencyType);
+            Assert.True(fCAaccountScreen.VerifyCDDAEOIChecks("The customer is not CDD and AEOI complete. Please arrange to have their details updated in In Touch, then try again."), "BOU not see correct CDD/AEOI error message");
+            customersScreen.SignOut();
+        }
+
+
         /* Cymonz FCA Creation
             Pre Conditions - Customer should be AEOI & CDD Green */
 
-        [TestCase("2558", "USD")]
+       [TestCase("2558", "DKK")]
         public void KB_FCA_Creation(string KBAccessNo,string CurrencyType)
         {     
             LoginScreen loginScreen = new LoginScreen(driver);
@@ -77,6 +130,7 @@ namespace BackOfficeAutomationCore
             customersScreen.SearchCustomer(KBAccessNo);
             Assert.True(customersScreen.VerifyCustomerSearched(KBAccessNo), "Customer not searched");
             CustomersDetailsScreen customersDetailsScreen = customersScreen.SelectCustomer();
+            Assert.True(customersDetailsScreen.VerifyCustomerDetailPage(), "Customer Details Screen is not Displayed");
             FCAaccountScreen fCAaccountScreen = customersDetailsScreen.NavigatetoFCA();
             fCAaccountScreen.NavigateFCAPopUp();
             Assert.True(fCAaccountScreen.VerifyFCAAccountTitle(), "BOU not see the FCA popup");
@@ -99,6 +153,7 @@ namespace BackOfficeAutomationCore
             customersScreen.SearchCustomer(KBAccessNo);
             Assert.True(customersScreen.VerifyCustomerSearched(KBAccessNo), "Customer not searched");
             CustomersDetailsScreen customersDetailsScreen = customersScreen.SelectCustomer();
+            Assert.True(customersDetailsScreen.VerifyCustomerDetailPage(), "Customer Details Screen is not Displayed");
             FCAaccountScreen fCAaccountScreen = customersDetailsScreen.NavigatetoFCA();
             Assert.True(fCAaccountScreen.FCAAvailabilityCheck(FCAAccountNo), "FCA Account " + FCAAccountNo + " is Not available");
             fCAaccountScreen.SearchFCAAccountNumber(FCAAccountNo);
@@ -111,18 +166,20 @@ namespace BackOfficeAutomationCore
 
         /* Cymonz FCA Unblocking Flow */
 
-        [TestCase("2558", "2558JPY00")]
+        [TestCase("2558", "2558USD05")]
         public void KB_FCA_UnBlocking(string KBAccessNo, string FCAAccountNo)
         {
             LoginScreen loginScreen = new LoginScreen(driver);
             HomeScreen homeScreen = loginScreen.navigateHome("peushan.panagoda@kiwibank.co.nz", "1qaz2wsx@");
             Assert.True(homeScreen.VerifySignInSuccess(), "User Sign in Fail");
+            Log.Information("User Login Successfully");
             homeScreen.NavigateCustomerTab();
             CustomersScreen customersScreen = homeScreen.NavigateCustomer();
             customersScreen.SelectSearchCritirea();
             customersScreen.SearchCustomer(KBAccessNo);
             Assert.True(customersScreen.VerifyCustomerSearched(KBAccessNo), "Customer not searched");
             CustomersDetailsScreen customersDetailsScreen = customersScreen.SelectCustomer();
+            Assert.True(customersDetailsScreen.VerifyCustomerDetailPage(), "Customer Details Screen is not Displayed");
             FCAaccountScreen fCAaccountScreen = customersDetailsScreen.NavigatetoFCA();
             Assert.True(fCAaccountScreen.FCAAvailabilityCheck(FCAAccountNo), "FCA Account " + FCAAccountNo + " is Not available");
             fCAaccountScreen.SearchFCAAccountNumber(FCAAccountNo);
@@ -147,6 +204,7 @@ namespace BackOfficeAutomationCore
             customersScreen.SearchCustomer(KBAccessNo);
             Assert.True(customersScreen.VerifyCustomerSearched(KBAccessNo), "Customer not searched");
             CustomersDetailsScreen customersDetailsScreen = customersScreen.SelectCustomer();
+            Assert.True(customersDetailsScreen.VerifyCustomerDetailPage(), "Customer Details Screen is not Displayed");
             FCAaccountScreen fCAaccountScreen = customersDetailsScreen.NavigatetoFCA();
             Assert.True(fCAaccountScreen.FCAAvailabilityCheck(FCAAccountNo), "FCA Account " + FCAAccountNo + " is Not available");
             fCAaccountScreen.SearchFCAAccountNumber(FCAAccountNo);
@@ -172,6 +230,7 @@ namespace BackOfficeAutomationCore
             customersScreen.SearchCustomer(KBAccessNo);
             Assert.True(customersScreen.VerifyCustomerSearched(KBAccessNo), "Customer not searched");
             CustomersDetailsScreen customersDetailsScreen = customersScreen.SelectCustomer();
+            Assert.True(customersDetailsScreen.VerifyCustomerDetailPage(), "Customer Details Screen is not Displayed");
             FCAaccountScreen fCAaccountScreen = customersDetailsScreen.NavigatetoFCA();
             Assert.True(fCAaccountScreen.FCAAvailabilityCheck(FCAAccountNo), "FCA Account " + FCAAccountNo + " is Not available");
             fCAaccountScreen.SearchFCAAccountNumber(FCAAccountNo);
@@ -183,9 +242,10 @@ namespace BackOfficeAutomationCore
 
         /* Cymonz Payment Work Flow with Existing Recipient*/
 
-        [TestCase("2558", "SOCIAL CLUB", "Peter Panagoda","10", "AUD")]
+        [TestCase("2558", "SOCIAL CLUB", "Justin Panagoda","20.00", "AUD", "389011083458900")]
+        //[TestCase("89590", "KID XMAS PARTY", "Peushan Panagoda", "10", "AUD", "389000077431401")]
         public void KB_Payments(string KBAccessNo,string CoreAccountName,
-                string RecipientName, string PayAmount,string Currency)
+                string RecipientName, string PayAmount,string Currency, string AccountNumber)
         {
            
             LoginScreen loginScreen = new LoginScreen(driver);
@@ -197,31 +257,30 @@ namespace BackOfficeAutomationCore
             customersScreen.SearchCustomer(KBAccessNo);
             Assert.True(customersScreen.VerifyCustomerSearched(KBAccessNo), "Customer not searched");
             CustomersDetailsScreen customersDetailsScreen = customersScreen.SelectCustomer();
+            Assert.True(customersDetailsScreen.VerifyCustomerDetailPage(), "Customer Details Screen is not Displayed");
             var data = new JObject();
             data = customersDetailsScreen.DataStore();
             QuoteScreen quoteScreen = customersDetailsScreen.navigateQuote();
             string account = data.GetValue("Account Name").ToString();
             Assert.True(quoteScreen.VerifyQuotes(account), "Not Reach to Quotes Screen");
             quoteScreen.SelectCurrency(Currency, PayAmount ,CoreAccountName);
+            Assert.True(quoteScreen.VerifyAccountNumberDisplayed(AccountNumber), "Account Number is not Visible");
             PaymentScreen paymentScreen = quoteScreen.ReviewTrnsaction();
-
-            var paneldata = new JObject();
-            paneldata = paymentScreen.VerifyPanel();
-            string reference = paneldata.GetValue("1").ToString();
-            paymentScreen.SelectRecipient(RecipientName, PayAmount);
-            RecipientPaymentScreen recipientPaymentScreen = paymentScreen.GotoSettlements();
+            Assert.True(paymentScreen.VerifyPanel(Currency, PayAmount), "Panel Data showing incorrect");
+            PaymentTransactionScreen paymentTransactionScreen = paymentScreen.SelectRecipient(RecipientName, PayAmount);
+            RecipientPaymentScreen recipientPaymentScreen = paymentTransactionScreen.GotoSettlements();
             recipientPaymentScreen.SelectRecipient(RecipientName);
 
             customersScreen.SignOut();
         }
 
 
-
         /* Cymonz Payment Work Flow change balance of FCA accounts*/
 
-        [TestCase("2558", "SOCIAL CLUB", "Account Number 2558USD06", "50", "USD")]
+        [TestCase("2558", "SOCIAL CLUB", "Account Number 2558SGD01", "50.00", "SGD", "389011083458900")]
+        [TestCase("89590", "KID XMAS PARTY", "Peushan Panagoda", "10.00", "AUD", "389000077431401")]
         public void KB_Payments_FCA_BalanceChange(string KBAccessNo, string CoreAccountName,
-                string RecipientName, string PayAmount, string Currency)
+                string RecipientName, string PayAmount, string Currency,string AccountNumber)
         {
 
             LoginScreen loginScreen = new LoginScreen(driver);
@@ -233,23 +292,27 @@ namespace BackOfficeAutomationCore
             customersScreen.SearchCustomer(KBAccessNo);
             Assert.True(customersScreen.VerifyCustomerSearched(KBAccessNo), "Customer not searched");
             CustomersDetailsScreen customersDetailsScreen = customersScreen.SelectCustomer();
+            Assert.True(customersDetailsScreen.VerifyCustomerDetailPage(), "Customer Details Screen is not Displayed");
             var data = new JObject();
             data = customersDetailsScreen.DataStore();
             QuoteScreen quoteScreen = customersDetailsScreen.navigateQuote();
             string account = data.GetValue("Account Name").ToString();
             Assert.True(quoteScreen.VerifyQuotes(account), "Not Reach to Quotes Screen");
             quoteScreen.SelectCurrency(Currency, PayAmount, CoreAccountName);
+            Assert.True(quoteScreen.VerifyAccountNumberDisplayed(AccountNumber), "Account Number is not Visible");
             PaymentScreen paymentScreen = quoteScreen.ReviewTrnsaction();
-            paymentScreen.SelectRecipient(RecipientName, PayAmount);     
+            paymentScreen.SelectRecipient(RecipientName, PayAmount);  
+            //Assert
             customersScreen.SignOut();
         }
 
 
         /* Cymonz Payment Work Flow with New Recipient*/
 
-        [TestCase("2558", "SOCIAL CLUB", "Peter","Panagoda", "10", "AUD")]
+        [TestCase("2558", "SOCIAL CLUB", "Justin","Panagoda", "10.00", "AUD", "389011083458900", "Australia")]
+        //[TestCase("89590", "KID XMAS PARTY", "Peushan Panagoda", "10", "AUD", "389000077431401")]
         public void KB_Payments_New_Recipient(string KBAccessNo, string CoreAccountName,
-                string RecipientFName, string RecipientLName, string PayAmount, string Currency)
+                string RecipientFName, string RecipientLName, string PayAmount, string Currency, string AccountNumber,string RecipientCurrency)
         {
 
             LoginScreen loginScreen = new LoginScreen(driver);
@@ -261,15 +324,20 @@ namespace BackOfficeAutomationCore
             customersScreen.SearchCustomer(KBAccessNo);
             Assert.True(customersScreen.VerifyCustomerSearched(KBAccessNo), "Customer not searched");
             CustomersDetailsScreen customersDetailsScreen = customersScreen.SelectCustomer();
+            Assert.True(customersDetailsScreen.VerifyCustomerDetailPage(), "Customer Details Screen is not Displayed");
             customersDetailsScreen.DataStore();
             QuoteScreen quoteScreen = customersDetailsScreen.navigateQuote();
             quoteScreen.SelectCurrency(Currency, PayAmount, CoreAccountName);
+            Assert.True(quoteScreen.VerifyAccountNumberDisplayed(AccountNumber), "Account Number is not Visible");
             PaymentScreen paymentScreen = quoteScreen.ReviewTrnsaction();
+            Assert.True(paymentScreen.VerifyPanel(Currency, PayAmount), "Panel Data showing incorrect");
             NewRecipientScreen newRecipientScreen = paymentScreen.AddRecipient("Create New Recipient");
-            PaymentScreen paymentScreenafterRecipient = newRecipientScreen.CreateRecipient(RecipientFName, RecipientLName);
-            paymentScreenafterRecipient.SelectRecipient(RecipientFName +" "+ RecipientLName, PayAmount);
-            RecipientPaymentScreen recipientPaymentScreen = paymentScreen.GotoSettlements();
+            PaymentScreen paymentScreenafterRecipient = newRecipientScreen.CreateRecipient(RecipientFName, RecipientLName, RecipientCurrency);
+            PaymentTransactionScreen paymentTransactionScreen = paymentScreenafterRecipient.SelectRecipient(RecipientFName +" "+ RecipientLName, PayAmount);
+            RecipientPaymentScreen recipientPaymentScreen = paymentTransactionScreen.GotoSettlements();
             recipientPaymentScreen.SelectRecipient(RecipientFName + " " + RecipientLName);
+
+
             customersScreen.SignOut();
         }
 

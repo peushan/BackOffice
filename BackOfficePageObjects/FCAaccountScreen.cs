@@ -67,6 +67,13 @@ namespace BackOfficeAutomation.pageObjects
         [FindsBy(How = How.XPath, Using = "//button[@class='close icon-remove']")]
         private IWebElement btnErrorClose;
 
+        [FindsBy(How = How.XPath, Using = "//form[@id='new_customer_bank_account']/div/div[@class='container-fluid']/em")]
+        private IWebElement txtCDDAEOI;
+
+        [FindsBy(How = How.XPath, Using = "//div[@class='modal-footer']/button[@data-dismiss='modal']")]
+        private IWebElement btnCancel;
+
+        
 
         By fcaTable1 = By.XPath("//div[@class='fixed-table-body']//table[@class='table table-bordered table-striped table-hover']/tbody");
         By txtCloseMsg1 = By.XPath("//h4[@class='modal-title']");
@@ -85,6 +92,22 @@ namespace BackOfficeAutomation.pageObjects
             SendKeys(txtEnterCurrency, Currency);
             txtEnterCurrency.SendKeys(Keys.Enter);
             Click(btnCreateFCA);
+        }
+
+        public bool VerifyCDDAEOIChecks(string Message)
+        {
+            bool displaySuccess = false;
+            if (txtCDDAEOI.Text.Equals(Message))
+            {
+                displaySuccess = true;
+                Click(btnCancel);
+            }
+            else
+            {
+                displaySuccess = false;
+            }
+            return displaySuccess;
+
         }
 
         public bool VerifyFCAAccountCreate()
@@ -121,7 +144,7 @@ namespace BackOfficeAutomation.pageObjects
         public bool FCAAvailabilityCheck(string FCAAccountNumber)
         {
             bool FCAAvailability = false;
-            WaitforVisibility(fcaTable1);
+            WaitforVisibility(fcaTable1,"FCA table is not Visible");
             List<IWebElement> Rows = new List<IWebElement>(fcaTable.FindElements(By.TagName("tr")));
             String FCAAvailable = "No";
             foreach (var elemTr in Rows)
@@ -211,7 +234,7 @@ namespace BackOfficeAutomation.pageObjects
         public bool ClickOnCloseConfiramation()
         {
             bool displaySuccess = false;
-            WaitforVisibility(txtCloseMsg1);
+            WaitforVisibility(txtCloseMsg1, "FCA Screen : Close Confirmation message is not visible");
             if (txtCloseMsg.Text.Equals("This FCA will be closed and cannot be reopened"))
             {
                 displaySuccess = true;
@@ -243,7 +266,7 @@ namespace BackOfficeAutomation.pageObjects
 
         public void NavigateCloseAccount(string CloseReason)
         {
-            WaitforVisibility(dropCloseReason1);
+            WaitforVisibility(dropCloseReason1, "FCA close reason drop down is not visible");
             Click(dropCloseReason);
             IWebElement txtCloserReason = driver.FindElement(By.XPath("//li[@title='" + CloseReason + "']"));
             Click(txtCloserReason);
@@ -268,7 +291,7 @@ namespace BackOfficeAutomation.pageObjects
 
         public bool VerifytheBlockConfirmation()
         {
-            WaitforVisibility(txtCloseMsg1);
+            WaitforVisibility(txtCloseMsg1, "FCA Screen : Block Confirmation message is not visible");
             bool displaySuccess = false;
             if (txtCloseMsg.Text.Equals("This will block all transactions on this FCA"))
             {
@@ -285,7 +308,7 @@ namespace BackOfficeAutomation.pageObjects
 
         public bool VerifytheUnblockConfirmation()
         {
-            WaitforVisibility(txtCloseMsg1);
+            WaitforVisibility(txtCloseMsg1, "FCA screen : FCA Close confirmation message is not visible");
             bool displaySuccess = false;
             if (txtCloseMsg.Text.Equals("Setting this FCA to active will allow full transactional access to the FCA"))
             {

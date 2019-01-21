@@ -3,6 +3,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Support.Extensions;
+using Serilog;
 using System;
 
 
@@ -10,7 +11,7 @@ namespace BackOfficeAutomation
 {
     public class BaseTest
     {
-        private static string browser = "ChromeHeadless";
+        private static string browser = "Chrome";
         private static string baseURL = "https://internationalservices-test.kbtest.cloud/back-office/login";
         public static IWebDriver driver;
 
@@ -20,7 +21,7 @@ namespace BackOfficeAutomation
             if (driver == null)
             {
                 BrowserLaunch();
-
+                
             }
             return driver;
         }
@@ -30,7 +31,7 @@ namespace BackOfficeAutomation
             switch (browser)
             {
                 case "Chrome":
-                    driver = new ChromeDriver(@"C:\Chrome\");
+                    driver = new ChromeDriver();
                     break;
                 case "IE":
                     driver = new InternetExplorerDriver();
@@ -46,11 +47,10 @@ namespace BackOfficeAutomation
                     options.AddArguments("no-sandbox");
                     options.AddArguments("disable-gpu");
                     options.AddArguments("window-size=1920,1080");
-       
                     //options.AddArguments("--window-size=2560,1440");
                     //options.AddArguments("--whitelisted-ips");
 
-                    driver = new ChromeDriver(@"C:\Chrome\", options);
+                    driver = new ChromeDriver(options);
                     break;
             }
             driver.Manage().Window.Maximize();

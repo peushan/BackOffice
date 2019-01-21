@@ -19,13 +19,11 @@ namespace BackOfficeAutomation.pageObjects
         [FindsBy(How = How.XPath, Using = "//input[@name='commit']")]
         private IWebElement btnSubmit;
 
-        [FindsBy(How = How.XPath, Using = "//a[@title='Settlements']/i[@class='fa fa-check']")]
-        private IWebElement tabSettelment;
+        [FindsBy(How = How.XPath, Using = "//div[@class='col-sm-12 space-20']/h3")]
+        private IWebElement txtReferenceid;
+        
 
-        [FindsBy(How = How.XPath, Using = "//a[@rel='beneficiary_payments']")]
-        private IWebElement LnkRecipientPayments;
-
-        By ContractDownloadicon = By.XPath("//i[@class='icon-download']");
+       
         By RecipientHeader = By.XPath("//div[@class='panel-heading']/h4[contains(text(),'Recipients')]");
         By PanelVisibility = By.XPath("//div[@class='col-sm-4']/div/div[@class='panel-body']/div/div");
 
@@ -35,9 +33,9 @@ namespace BackOfficeAutomation.pageObjects
             PageFactory.InitElements(this, new RetryingElementLocator(driver, TimeSpan.FromSeconds(30)));
         }
 
-        public void SelectRecipient(string RecipientName, string PayAmount)
+        public PaymentTransactionScreen SelectRecipient(string RecipientName, string PayAmount)
         {
-            WaitforVisibility(RecipientHeader);
+            WaitforVisibility(RecipientHeader, "Recipient Selection Page is not visible");
             Click(drpRecipient);
             Sleep(3);
             By textSelectRecipient = By.XPath("//ul[@class='chosen-results']/li[@title='" + RecipientName + "']");
@@ -46,12 +44,17 @@ namespace BackOfficeAutomation.pageObjects
             SendKeys(textAmount, PayAmount);
             Sleep(3);
             Click(btnSubmit);
+
+            return new PaymentTransactionScreen(driver);
         }
 
         JObject paneldata = new JObject();
-        public JObject VerifyPanel()
+        public bool VerifyPanel(string Currency, string Amount)
         {
-            WaitforVisibility(PanelVisibility);
+
+            var payReference = txtReferenceid.Text.Replace("Payments for ", string.Empty);
+            bool displaysuccess = false;
+            WaitforVisibility(PanelVisibility, "Payment Screen : Panel data is not visible");
             ReadOnlyCollection<IWebElement> rows = driver.FindElements(By.XPath("//div[@class='col-sm-4']/div/div[@class='panel-body']/div/div"));
             int i = 0;
             foreach (IWebElement row in rows)
@@ -63,15 +66,15 @@ namespace BackOfficeAutomation.pageObjects
                 }
 
             }
-            if(paneldata.GetValue("1").ToString().Contains("Buy Currency\r\nAUD"))
+            if(paneldata.GetValue("1").ToString().Contains("Buy Currency\r\n"+ Currency) && (paneldata.GetValue("2").ToString().Contains("Amount\r\n"+ Amount)))
             {
-                Console.WriteLine("2");
+                displaysuccess = true;
             }
             else
             {
-                Console.WriteLine("3");
+                displaysuccess = false;
             }
-            return paneldata;
+            return displaysuccess;
         }
 
         public NewRecipientScreen AddRecipient(string RecipientName)
@@ -84,14 +87,5 @@ namespace BackOfficeAutomation.pageObjects
             return new NewRecipientScreen(driver);
         }
 
-
-        public RecipientPaymentScreen GotoSettlements()
-        {
-            WaitforVisibility(ContractDownloadicon);
-            Click(tabSettelment);
-            Click(LnkRecipientPayments);
-
-            return new RecipientPaymentScreen(driver);
-        }
     }
 }

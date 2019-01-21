@@ -44,7 +44,6 @@ namespace BackOfficeAutomation.pageObjects
         [FindsBy(How = How.XPath, Using = "//input[@class='address_city_txt form-control input-sm']")]
         private IWebElement txtStoredCity;
 
-
         [FindsBy(How = How.XPath, Using = "//a[@class='btn btn-sm btn-primary new_quote']")]
         private IWebElement btnQuote;
         
@@ -74,9 +73,25 @@ namespace BackOfficeAutomation.pageObjects
             return CustomerDetails;
         }
 
+        public bool VerifyCustomerDetailPage()
+        {
+            bool displaysuccess = false;
+            if (btnQuote.Displayed)
+            {
+                displaysuccess = true;
+            }
+            else
+            {
+                displaysuccess = false;
+            }
+
+            return displaysuccess;
+
+        }
+
         public CustomersScreen SavingData()
         {
-            WaitforVisibility(btnSave1);
+            WaitforVisibility(btnSave1, "Customer Screen - Save Button is not visible");
             btnSave.Click();
             Sleep(5);
             return new CustomersScreen(driver);
@@ -84,7 +99,7 @@ namespace BackOfficeAutomation.pageObjects
 
         public FCAaccountScreen NavigatetoFCA()
         {
-            WaitforVisibility(lnkFCA);
+            WaitforVisibility(lnkFCA, "Customer Details Screen : FCA link is not Visible");
             Click(lnkFCATab);
             return new FCAaccountScreen(driver);
         }

@@ -80,11 +80,11 @@ namespace BackOfficeAutomation.pageObjects
 
         public CustomersDetailsScreen navigateCustomerRegistration(string AccessNumber)
         {
-            WaitforVisibility(lablCreateAccount);
+            WaitforVisibility(lablCreateAccount, "Customer Screen is not visible");
             SendKeys(txtKBaccessnumber, AccessNumber);
             Click(btnContinue);
             Sleep(7);
-            WaitforVisibility(lablCustomerDetails);
+            WaitforVisibility(lablCustomerDetails, "Customer Detail Screen is not visible");
             return new CustomersDetailsScreen(driver);
         }
 

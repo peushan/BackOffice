@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
+using Serilog;
 using System;
 
 namespace BackOfficeAutomation.pageObjects
@@ -19,6 +20,7 @@ namespace BackOfficeAutomation.pageObjects
         {
             BasePage.driver = driver;
             PageFactory.InitElements(this, new RetryingElementLocator(driver, TimeSpan.FromSeconds(10)));
+            Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
         }
 
         public HomeScreen navigateHome(string userName, string password)
@@ -26,6 +28,7 @@ namespace BackOfficeAutomation.pageObjects
             SendKeys(txtuserName, userName);
             SendKeys(txtPassword, password);
             Click(btnLogin);
+            Log.Information("BOU enter credentials and click on the Login Button");
             return new HomeScreen(driver);
         }
 

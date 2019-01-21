@@ -21,7 +21,7 @@ namespace BackOfficeAutomation.pageObjects
         [FindsBy(How = How.XPath, Using = "//input[@id='new_transaction_base_currency_amount']")]
         private IWebElement textBaseCurrency;
 
-        [FindsBy(How = How.XPath, Using = "//a[@class='btn btn-primary btn-block btn-success accept-transaction']")]
+        [FindsBy(How = How.XPath, Using = "//a[@class='btn btn-primary btn-block btn-success accept-transaction submit-transaction']")]
         private IWebElement btnProcess;
 
         [FindsBy(How = How.XPath, Using = "//a[@id='show_processing_popup']")]
@@ -30,9 +30,12 @@ namespace BackOfficeAutomation.pageObjects
         [FindsBy(How = How.XPath, Using = "//input[@id='keyword']")]
         private IWebElement txtCustomername;
 
+        [FindsBy(How = How.XPath, Using = "//div[@id='account_number']")]
+        private IWebElement txtAccountNumber;
 
         By AccountNumber = By.XPath("//div[@id='account_number']");
-        
+        By SubmitTransactionbtn = By.XPath("//a[@id='show_processing_popup']");
+        By Processbtn = By.XPath("//a[@class='btn btn-primary btn-block btn-success accept-transaction submit-transaction']");
 
         public QuoteScreen(IWebDriver driver)
         {
@@ -54,15 +57,33 @@ namespace BackOfficeAutomation.pageObjects
                 By textSelectAccount = By.XPath("//ul[@class='chosen-results']/li[@title='" + Account + "']");
                 IWebElement textSelectAccount1 = driver.FindElement(textSelectAccount);
                 textSelectAccount1.Click();
-                WaitforVisibility(AccountNumber);
+                WaitforVisibility(AccountNumber, "Quote Screen : Account number is not visible");
                 Sleep(4);
-                Click(btnProcess);
+                
             }
             catch (WebDriverException e)
             {
                 Sleep(8);
-                Click(btnProcess);         
+                    
             }
+
+        }
+
+        public bool VerifyAccountNumberDisplayed(string AccountNumber)
+        {
+            bool displaysuccess = false;
+            if (txtAccountNumber.Text.Contains(AccountNumber))
+            {
+                displaysuccess = true;
+                WaitforVisibility(Processbtn, "Quote Screen : Trasaction Proceed button is not visible"); 
+                Click(btnProcess);
+            }
+            else
+            {
+                displaysuccess = false;
+            }
+
+            return displaysuccess;
 
         }
 
@@ -85,6 +106,7 @@ namespace BackOfficeAutomation.pageObjects
 
         public PaymentScreen ReviewTrnsaction()
         {
+            WaitforVisibility(SubmitTransactionbtn,"Payment Transaction page is not visible");
             Click(btnSubmitTransaction);
             return new PaymentScreen(driver);
         }

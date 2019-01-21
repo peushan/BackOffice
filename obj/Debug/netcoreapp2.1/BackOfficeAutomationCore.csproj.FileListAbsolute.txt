@@ -11,28 +11,9 @@ C:\Users\ppanag01\source\repos\BackOfficeAutomationCore\BackOfficeAutomationCore
 C:\Users\ppanag01\source\repos\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\BackOfficeAutomationCore.runtimeconfig.dev.json
 C:\Users\ppanag01\source\repos\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\BackOfficeAutomationCore.dll
 C:\Users\ppanag01\source\repos\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\BackOfficeAutomationCore.pdb
+C:\Users\ppanag01\source\repos\BackOfficeAutomationCore\BackOfficeAutomationCore\obj\Debug\netcoreapp2.1\BackOfficeAutomationCore.csprojAssemblyReference.cache
 C:\Users\ppanag01\source\repos\BackOfficeAutomationCore\BackOfficeAutomationCore\obj\Debug\netcoreapp2.1\BackOfficeAutomationCore.csproj.CoreCompileInputs.cache
 C:\Users\ppanag01\source\repos\BackOfficeAutomationCore\BackOfficeAutomationCore\obj\Debug\netcoreapp2.1\BackOfficeAutomationCore.AssemblyInfoInputs.cache
 C:\Users\ppanag01\source\repos\BackOfficeAutomationCore\BackOfficeAutomationCore\obj\Debug\netcoreapp2.1\BackOfficeAutomationCore.AssemblyInfo.cs
 C:\Users\ppanag01\source\repos\BackOfficeAutomationCore\BackOfficeAutomationCore\obj\Debug\netcoreapp2.1\BackOfficeAutomationCore.dll
 C:\Users\ppanag01\source\repos\BackOfficeAutomationCore\BackOfficeAutomationCore\obj\Debug\netcoreapp2.1\BackOfficeAutomationCore.pdb
-C:\Users\ppanag01\source\repos\BackOfficeAutomationCore\BackOfficeAutomationCore\obj\Debug\netcoreapp2.1\BackOfficeAutomationCore.csprojAssemblyReference.cache
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\NUnit3.TestAdapter.dll
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\NUnit3.TestAdapter.pdb
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\nunit.engine.netstandard.dll
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\Mono.Cecil.dll
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\xunit.runner.visualstudio.dotnetcore.testadapter.dll
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\xunit.runner.reporters.netcoreapp10.dll
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\xunit.runner.utility.netcoreapp10.dll
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\BackOfficeAutomationCore.dll.config
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\BackOfficeAutomationCore.deps.json
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\BackOfficeAutomationCore.runtimeconfig.json
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\BackOfficeAutomationCore.runtimeconfig.dev.json
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\BackOfficeAutomationCore.dll
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\bin\Debug\netcoreapp2.1\BackOfficeAutomationCore.pdb
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\obj\Debug\netcoreapp2.1\BackOfficeAutomationCore.csprojAssemblyReference.cache
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\obj\Debug\netcoreapp2.1\BackOfficeAutomationCore.csproj.CoreCompileInputs.cache
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\obj\Debug\netcoreapp2.1\BackOfficeAutomationCore.AssemblyInfoInputs.cache
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\obj\Debug\netcoreapp2.1\BackOfficeAutomationCore.AssemblyInfo.cs
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\obj\Debug\netcoreapp2.1\BackOfficeAutomationCore.dll
-C:\Automation Backup\BackOfficeAutomationCore\BackOfficeAutomationCore\obj\Debug\netcoreapp2.1\BackOfficeAutomationCore.pdb
