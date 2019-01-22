@@ -82,9 +82,7 @@ namespace BackOfficeAutomation.pageObjects
             {
                 displaysuccess = false;
             }
-
             return displaysuccess;
-
         }
 
 

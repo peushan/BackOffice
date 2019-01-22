@@ -13,6 +13,11 @@ namespace BackOfficeAutomation.pageObjects
         [FindsBy(How = How.XPath, Using = "//a[@rel='beneficiary_payments']")]
         private IWebElement LnkRecipientPayments;
 
+        [FindsBy(How = How.XPath, Using = "//i[@class='icon-download']")]
+        private IWebElement btnBackTransactin;
+
+
+
         By ContractDownloadicon = By.XPath("//i[@class='icon-download']");
        
 
@@ -29,6 +34,24 @@ namespace BackOfficeAutomation.pageObjects
             Click(LnkRecipientPayments);
             return new RecipientPaymentScreen(driver);
         }
+
+        public bool VerifyTransactionPage()
+        {
+            bool displaysuccess = false;
+            if (btnBackTransactin.Displayed)
+            {
+                displaysuccess = true;
+            }
+            else
+            {
+                displaysuccess = false;
+            }
+
+            return displaysuccess;
+        }
+
+
+        
 
     }
 }

@@ -296,7 +296,6 @@ namespace BackOfficeAutomation.pageObjects
             if (txtCloseMsg.Text.Equals("This will block all transactions on this FCA"))
             {
                 displaySuccess = true;
-                Click(btnClose);
             }
             else
             {
@@ -313,7 +312,6 @@ namespace BackOfficeAutomation.pageObjects
             if (txtCloseMsg.Text.Equals("Setting this FCA to active will allow full transactional access to the FCA"))
             {
                 displaySuccess = true;
-                Click(btnClose);
             }
             else
             {

@@ -63,7 +63,7 @@ namespace BackOfficeAutomation
             driver.Url = url;
         }
 
-        protected void UITest(Action action)
+        protected void BackOfficeUITest(Action action)
         {
             try
             {
@@ -72,10 +72,31 @@ namespace BackOfficeAutomation
             catch (Exception ex)
             {
                 var screenshot = driver.TakeScreenshot();
+                var date = DateTime.Now.ToString("dddd, dd MMMM yyyy HH:mm:ss");
+                var filePath = "C:\\Users\\ppanag01\\source\\repos\\BackOfficeAutomationCore\\BackOfficeAutomationCore\\logs\\" + date + ".jpg";
 
-                var filePath = "<some appropriate file path goes here>";
+                screenshot.SaveAsFile(filePath, OpenQA.Selenium.ScreenshotImageFormat.Png);
 
-                screenshot.SaveAsFile(filePath, OpenQA.Selenium.ScreenshotImageFormat.Jpeg);
+                // This would be a good place to log the exception message and
+                // save together with the screenshot
+
+                throw;
+            }
+        }
+
+        protected void BackOfficeUITest1(Action action, string testcase)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+                var screenshot = driver.TakeScreenshot();
+                var date = DateTime.Now.ToString("dddd, dd MMMM yyyy HH_mm_ss");
+                var filePath = "C:\\Users\\ppanag01\\source\\repos\\BackOfficeAutomationCore\\BackOfficeAutomationCore\\logs\\" + date + " - " + testcase + ".jpg";
+
+                screenshot.SaveAsFile(filePath, OpenQA.Selenium.ScreenshotImageFormat.Png);
 
                 // This would be a good place to log the exception message and
                 // save together with the screenshot
